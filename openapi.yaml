@@ -22,10 +22,12 @@ paths:
         - name: RUN_TOKEN
           in: path
           required: true
+          description: uid of the run instance
           schema:
             type: string
         - name: api_key
           in: query
+          description: uid of the user account
           schema:
             type: string
           example: tF33Wsk30sWe
@@ -56,16 +58,20 @@ paths:
       parameters:
         - name: PROJECT_TOKEN
           in: path
+          description: uid of the project
           required: true
           schema:
             type: string
           example: t-0WMEZ-Bc9sWEJASsYvP7y4
         - name: api_key
           in: query
+          description: uid of the account
           schema:
             type: string
           example: tF33Wsk30sWe
         - name: format
+          description: >
+            The format that you would like to get the data in. Possible values csv or json. Defaults to json
           in: query
           schema:
             type: string
@@ -80,6 +86,10 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/Project'
+            text/csv:
+              schema:
+                type: string
+                format: binary
         default:
           description: unexpected error
           content:
@@ -134,6 +144,7 @@ paths:
     get:
       operationId: listProjects
       description: This gets a list of projects in your account
+      summary: Gets a list of projects in your account
       externalDocs:
         description: Site specificatiion
         url: 'https://www.parsehub.com/docs/ref/api/v2/#list-all-projects'
@@ -191,6 +202,7 @@ paths:
           required: true
           schema:
             type: string
+          description: UID of the project to run
           example: tHoFuTC_MTR1
         - name: api_key
           in: query
