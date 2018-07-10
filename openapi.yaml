@@ -74,10 +74,7 @@ paths:
             The format that you would like to get the data in. Possible values csv or json. Defaults to json
           in: query
           schema:
-            type: string
-            enum:
-              - json
-              - csv
+            $ref: '#/components/schemas/ResultFormat'
           example: json
       responses:
         '200':
@@ -144,7 +141,7 @@ paths:
     get:
       operationId: listProjects
       description: This gets a list of projects in your account
-      summary: Gets a list of projects in your account
+      summary: Lists projects
       externalDocs:
         description: Site specificatiion
         url: 'https://www.parsehub.com/docs/ref/api/v2/#list-all-projects'
@@ -258,13 +255,12 @@ paths:
                 $ref: '#/components/schemas/Error'
   '/runs/{RUN_TOKEN}':
     get:
-      operationId: getARun
+      operationId: getRun
       externalDocs:
         description: Site spec
         url: 'https://www.parsehub.com/docs/ref/api/v2/#get-a-run'
       description: >-
-        This returns the run object for a given run token. You can call this
-        method repeatedly to poll for when a run is done, though we recommend
+        You can call this method repeatedly to poll for when a run is done, though we recommend
         using a webhook instead. This method is rate-limited. For each run, you
         may make at most 25 calls during the first 5 minutes after the run
         started, and at most one call every 3 minutes after that.
@@ -324,6 +320,50 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/Error'
+  '/runs/{RUN_TOKEN}/data':
+    get:
+      operationId: getRun
+      externalDocs:
+        description: Site spec
+        url: 'https://www.parsehub.com/docs/ref/api/v2/#get-a-run'
+      description: >-
+        This returns the data that was extracted by a run.
+      summary: Gets Data for a run
+      parameters:
+        - name: api_key
+          in: query
+          description: API key for your account
+          schema:
+            type: string
+          required: true
+        - name: RUN_TOKEN
+          in: path
+          required: true
+          schema:
+            type: string
+        - name: format
+          description: The format that you would like to get the data in. Possible values csv or json. Defaults to json
+          in: query
+          schema:
+            $ref: '#/components/schemas/ResultFormat'
+          example: csv
+      responses:
+        '200':
+          description: Run data
+          content:
+            application/json:
+              schema:
+                type: object
+            text/csv:
+              schema:
+                type: string
+                format: binary
+        default:
+          description: unexpected error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
 components:
   schemas:
     Project:
@@ -362,7 +402,11 @@ components:
           description: The total number of projects in your account.
           type: integer
           format: int32
-
+    ResultFormat:
+      type: string
+      enum:
+        - json
+        - csv
     Status:
       type: string
       enum:
