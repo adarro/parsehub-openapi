@@ -47,6 +47,7 @@ paths:
                 $ref: '#/components/schemas/Error'
   '/projects/{PROJECT_TOKEN}/last_ready_run/data':
     get:
+      operationId: lastReadyRun
       summary: This returns the data for the most recent ready run for a project.
       description: >
         This returns the data for the most recent ready run for a project. You
