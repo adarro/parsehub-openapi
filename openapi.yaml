@@ -27,8 +27,8 @@ paths:
             type: string
         - name: api_key
           in: query
+          description: The API key for your account.
           required: true
-          description: uid of the user account
           schema:
             type: string
           example: tF33Wsk30sWe
@@ -60,13 +60,13 @@ paths:
         - name: PROJECT_TOKEN
           in: path
           description: uid of the project
-          required: true
+          required: true 
           schema:
-            type: string
+            $ref: '#/components/schemas/ProjectToken'
           example: t-0WMEZ-Bc9sWEJASsYvP7y4
         - name: api_key
           in: query
-          description: uid of the account
+          description: The API key for your account.
           schema:
             type: string
           example: tF33Wsk30sWe
@@ -101,22 +101,26 @@ paths:
       description: This will return the project object for a specific project.
       parameters:
         - name: PROJECT_TOKEN
+          description: uid of the project instance
           in: path
           required: true
           schema:
             type: string
           example: t-0WMEZ-Bc9sWEJASsYvP7y4
         - name: include_options
+          description: Includes the “options_json” key in the result returned. For performance reasons, we exclude this key by default.
           in: query
           schema:
             type: string
           example: 1
         - name: offset
+          description: Specifies the offset from which to start the run_list. E.g. in order to get most recent runs 21-40, specify an offset of 20. Defaults to 0.
           in: query
           schema:
             type: string
           example: 0
         - name: api_key
+          description: The API key for your account.
           in: query
           required: true
           schema:
@@ -148,22 +152,27 @@ paths:
         url: 'https://www.parsehub.com/docs/ref/api/v2/#list-all-projects'
       parameters:
         - name: include_options
+          description: > 
+            Adds options_json, main_template, main_site and webhook to the entries of projects. Set this parameter to 1 if you intend to use them in ParseHub API calls. This parameter requires use of the offset and limit parameters to access the full list of projects.
           in: query
           schema:
             type: string
           example: 1
         - name: offset
+          description: Specifies the offset from which to start the projects. E.g. in order to get projects 21-40, specify an offset of 20. Defaults to 0.
           in: query
           schema:
             type: string
           example: 0
         - name: api_key
+          description: The API key for your account.
           in: query
           schema:
             type: string
           required: true
           example: tF33Wsk30sWe
         - name: limit
+          description: Specifies how many entries will be returned in projects. Accepts values between 1 and 20 inclusively. Defaults to 20.
           in: query
           schema:
             type: string
@@ -273,6 +282,7 @@ paths:
           schema:
             type: string
         - name: RUN_TOKEN
+          description: uid of the run instance
           in: path
           required: true
           schema:
@@ -304,6 +314,7 @@ paths:
           schema:
             type: string
         - name: RUN_TOKEN
+          description: uid of the run instance
           in: path
           required: true
           schema:
@@ -338,6 +349,7 @@ paths:
             type: string
           required: true
         - name: RUN_TOKEN
+          description: uid of run instance (set from getRun or listed in last ready run)
           in: path
           required: true
           schema:
@@ -417,6 +429,11 @@ components:
         - cancelled
         - complete
         - error
+    ProjectToken:
+      type: string
+      externalDocs:
+            description: more info
+            url: 'https://help.parsehub.com/hc/en-us/articles/218181017-Access-your-API-key-Project-Token'
     Run:
       type: object
       required:
