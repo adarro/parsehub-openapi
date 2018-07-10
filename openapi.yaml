@@ -322,7 +322,7 @@ paths:
                 $ref: '#/components/schemas/Error'
   '/runs/{RUN_TOKEN}/data':
     get:
-      operationId: getRun
+      operationId: getRunData
       externalDocs:
         description: Site spec
         url: 'https://www.parsehub.com/docs/ref/api/v2/#get-a-run'
