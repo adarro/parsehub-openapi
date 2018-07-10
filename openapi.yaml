@@ -27,6 +27,7 @@ paths:
             type: string
         - name: api_key
           in: query
+          required: true
           description: uid of the user account
           schema:
             type: string
@@ -80,7 +81,7 @@ paths:
         '200':
           description: The project Object
           content:
-            application/json:
+            application/json: 
               schema:
                 $ref: '#/components/schemas/Project'
             text/csv:
@@ -363,7 +364,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/Error'
+                $ref: '#/components/schemas/Error'                
 components:
   schemas:
     Project:
