@@ -73,6 +73,7 @@ paths:
         - name: api_key
           in: query
           description: The API key for your account.
+          required: true
           schema:
             type: string
           example: tF33Wsk30sWe
@@ -304,6 +305,7 @@ paths:
           description: API key for your account
           schema:
             type: string
+          required: true
         - name: RUN_TOKEN
           description: uid of the run instance
           in: path
@@ -338,6 +340,7 @@ paths:
           description: API key for your account
           schema:
             type: string
+          required: true
         - name: RUN_TOKEN
           description: uid of the run instance
           in: path
