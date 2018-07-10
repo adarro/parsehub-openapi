@@ -26,13 +26,13 @@ paths:
           required: true
           description: uid of the run instance
           schema:
-            type: string
+            $ref: "#/components/schemas/RunToken"
         - name: api_key
           in: query
           description: The API key for your account.
           required: true
           schema:
-            type: string
+            $ref: "#/components/schemas/ApiKey"
           example: tF33Wsk30sWe
       responses:
         '200':
@@ -117,7 +117,7 @@ paths:
           in: path
           required: true
           schema:
-            type: string
+            $ref: "#/components/schemas/ProjectToken"
           example: t-0WMEZ-Bc9sWEJASsYvP7y4
         - name: include_options
           description: Includes the “options_json” key in the result returned. For performance reasons, we exclude this key by default.
@@ -139,7 +139,7 @@ paths:
           in: query
           required: true
           schema:
-            type: string
+            $ref: "#/components/schemas/ApiKey"
           example: tF33Wsk30sWe
       responses:
         '200':
@@ -185,7 +185,7 @@ paths:
           description: The API key for your account.
           in: query
           schema:
-            type: string
+            $ref: "#/components/schemas/ApiKey"
           required: true
           example: tF33Wsk30sWe
         - name: limit
@@ -238,7 +238,7 @@ paths:
           description: API key for your account
           required: true
           schema:
-            type: string
+            $ref: "#/components/schemas/ApiKey"
         - name: start_url
           description: The url to start running on. Defaults to the project’s start_site.
           in: query
@@ -304,14 +304,14 @@ paths:
           in: query
           description: API key for your account
           schema:
-            type: string
+            $ref: "#/components/schemas/ApiKey"
           required: true
         - name: RUN_TOKEN
           description: uid of the run instance
           in: path
           required: true
           schema:
-            type: string
+            $ref: "#/components/schemas/RunToken"
       responses:
         '200':
           description: Run information
@@ -339,14 +339,14 @@ paths:
           in: query
           description: API key for your account
           schema:
-            type: string
+            $ref: "#/components/schemas/ApiKey"
           required: true
         - name: RUN_TOKEN
           description: uid of the run instance
           in: path
           required: true
           schema:
-            type: string
+            $ref: "#/components/schemas/RunToken"
       responses:
         '200':
           description: 'If successful, returns an object with the run token'
@@ -376,14 +376,14 @@ paths:
           in: query
           description: API key for your account
           schema:
-            type: string
+            $ref: "#/components/schemas/ApiKey"
           required: true
         - name: RUN_TOKEN
           description: uid of run instance (set from getRun or listed in last ready run)
           in: path
           required: true
           schema:
-            type: string
+            $ref: "#/components/schemas/RunToken"
         - name: format
           description: The format that you would like to get the data in. Possible values csv or json. Defaults to json
           in: query
@@ -450,6 +450,9 @@ components:
       enum:
         - json
         - csv
+      description: >
+        * `json` jsonformat
+        * `csv` comma separated value text file
     Status:
       type: string
       enum:
@@ -459,11 +462,23 @@ components:
         - cancelled
         - complete
         - error
+    RunToken:
+      type: string
+      description: ID for a given run instance
+      example: tCcB4hfFP6wvBRe2gwZv9aJp
     ProjectToken:
       type: string
       externalDocs:
-            description: more info
+            description: How to access your API Key / Project Token
             url: 'https://help.parsehub.com/hc/en-us/articles/218181017-Access-your-API-key-Project-Token'
+      example: t-0WMEZ-Bc9sWGHAMsYvP7y4
+    ApiKey:
+      type: string
+      description: The API key for your account.
+      externalDocs:
+            description: How to access your API Key / Project Token
+            url: 'https://help.parsehub.com/hc/en-us/articles/218181017-Access-your-API-key-Project-Token'
+      example: tCcB4hfFP6wvBRe2gwZv9aJp
     Run:
       type: object
       required:
