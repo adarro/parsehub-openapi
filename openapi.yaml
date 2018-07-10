@@ -112,13 +112,16 @@ paths:
           description: Includes the “options_json” key in the result returned. For performance reasons, we exclude this key by default.
           in: query
           schema:
-            type: string
+            type: integer
+            format: int32
           example: 1
         - name: offset
           description: Specifies the offset from which to start the run_list. E.g. in order to get most recent runs 21-40, specify an offset of 20. Defaults to 0.
           in: query
           schema:
-            type: string
+            type: integer
+            format: int32
+            minimum: 0
           example: 0
         - name: api_key
           description: The API key for your account.
@@ -157,13 +160,16 @@ paths:
             Adds options_json, main_template, main_site and webhook to the entries of projects. Set this parameter to 1 if you intend to use them in ParseHub API calls. This parameter requires use of the offset and limit parameters to access the full list of projects.
           in: query
           schema:
-            type: string
+            type: integer
+            format: int32
           example: 1
         - name: offset
           description: Specifies the offset from which to start the projects. E.g. in order to get projects 21-40, specify an offset of 20. Defaults to 0.
           in: query
           schema:
-            type: string
+            type: integer
+            format: int32
+            minimum: 0
           example: 0
         - name: api_key
           description: The API key for your account.
@@ -176,7 +182,10 @@ paths:
           description: Specifies how many entries will be returned in projects. Accepts values between 1 and 20 inclusively. Defaults to 20.
           in: query
           schema:
-            type: string
+            type: integer
+            format: int32
+            minimum: 1
+            maximum: 20
           example: 20
       responses:
         '200':
@@ -491,4 +500,6 @@ components:
           type: integer
           format: int32
         message:
+          type: string
+        title:
           type: string
