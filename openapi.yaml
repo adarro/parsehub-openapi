@@ -18,6 +18,8 @@ paths:
       description: >-
         This cancels a run and changes its status to cancelled. Any data that
         was extracted so far will be available.
+      tags:
+        - Run
       parameters:
         - name: RUN_TOKEN
           in: path
@@ -57,6 +59,9 @@ paths:
       externalDocs:
         description: Site Documentation
         url: 'https://www.parsehub.com/docs/ref/api/v2/#get-last-ready-data'
+      tags:
+        - Run
+        - Data
       parameters:
         - name: PROJECT_TOKEN
           in: path
@@ -100,6 +105,11 @@ paths:
       operationId: getProject
       summary: This will return the project object for a specific project.
       description: This will return the project object for a specific project.
+      externalDocs:
+        description: Official Site Documentation
+        url: 'https://www.parsehub.com/docs/ref/api/v2/#get-a-project'
+      tags:
+        - Project
       parameters:
         - name: PROJECT_TOKEN
           description: uid of the project instance
@@ -130,9 +140,6 @@ paths:
           schema:
             type: string
           example: tF33Wsk30sWe
-      externalDocs:
-        description: site specifications
-        url: 'https://www.parsehub.com/docs/ref/api/v2/#get-a-project'
       responses:
         '200':
           description: The project Object
@@ -154,6 +161,8 @@ paths:
       externalDocs:
         description: Site specificatiion
         url: 'https://www.parsehub.com/docs/ref/api/v2/#list-all-projects'
+      tags:
+        - Project
       parameters:
         - name: include_options
           description: > 
@@ -213,6 +222,8 @@ paths:
       externalDocs:
         description: site specification
         url: 'https://www.parsehub.com/docs/ref/api/v2/#run-a-project'
+      tags:
+        - Run
       parameters:
         - name: PROJECT_TOKEN
           in: path
@@ -285,6 +296,8 @@ paths:
         may make at most 25 calls during the first 5 minutes after the run
         started, and at most one call every 3 minutes after that.
       summary: Returns the run object for a given run token
+      tags: 
+        - Run
       parameters:
         - name: api_key
           in: query
@@ -317,6 +330,8 @@ paths:
         url: 'https://www.parsehub.com/docs/ref/api/v2/#cancel-a-run'
       description: 'This cancels a run if running, and deletes the run and its data.'
       summary: Deletes a run along with data
+      tags:
+        - Run
       parameters:
         - name: api_key
           in: query
@@ -351,6 +366,8 @@ paths:
       description: >-
         This returns the data that was extracted by a run.
       summary: Gets Data for a run
+      tags:
+        - Run
       parameters:
         - name: api_key
           in: query
@@ -503,3 +520,10 @@ components:
           type: string
         title:
           type: string
+tags:
+  - name: Project
+    description: Acts on or retrieves project level information
+  - name: Run
+    description: Acts on or retrieves Job level information (Runs)
+  - name: Data
+    description: Affects data (retrieves / deletes etc.)
