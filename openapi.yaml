@@ -18,6 +18,9 @@ paths:
       description: >-
         This cancels a run and changes its status to cancelled. Any data that
         was extracted so far will be available.
+      externalDocs:
+        description: Official Site Documentation
+        url: 'https://www.parsehub.com/docs/ref/api/v2/#cancel-a-run'
       tags:
         - Run
       parameters:
@@ -57,7 +60,7 @@ paths:
         project.
           *Note: The Content-Encoding of this response is always gzip.*
       externalDocs:
-        description: Site Documentation
+        description: Official Site Documentation
         url: 'https://www.parsehub.com/docs/ref/api/v2/#get-last-ready-data'
       tags:
         - Run
@@ -104,8 +107,8 @@ paths:
   '/projects/{PROJECT_TOKEN}':
     get:
       operationId: getProject
-      summary: This will return the project object for a specific project.
-      description: This will return the project object for a specific project.
+      summary: Get the project object
+      description: This will return the project object for a specific project. Including extra information if requested via include_options.
       externalDocs:
         description: Official Site Documentation
         url: 'https://www.parsehub.com/docs/ref/api/v2/#get-a-project'
@@ -160,7 +163,7 @@ paths:
       description: This gets a list of projects in your account
       summary: Lists projects
       externalDocs:
-        description: Site specificatiion
+        description: Official Site Documentation
         url: 'https://www.parsehub.com/docs/ref/api/v2/#list-all-projects'
       tags:
         - Project
@@ -221,7 +224,7 @@ paths:
         order to retrieve it.
       summary: Starts a running instance on the ParseHubCloud
       externalDocs:
-        description: site specification
+        description: Official Site Documentation
         url: 'https://www.parsehub.com/docs/ref/api/v2/#run-a-project'
       tags:
         - Run
@@ -289,7 +292,7 @@ paths:
     get:
       operationId: getRun
       externalDocs:
-        description: Site spec
+        description: Official Site Documentation
         url: 'https://www.parsehub.com/docs/ref/api/v2/#get-a-run'
       description: >-
         You can call this method repeatedly to poll for when a run is done, though we recommend
@@ -328,7 +331,7 @@ paths:
     delete:
       operationId: deleteRun
       externalDocs:
-        description: Site spec
+        description: Official Site Documentation
         url: 'https://www.parsehub.com/docs/ref/api/v2/#cancel-a-run'
       description: 'This cancels a run if running, and deletes the run and its data.'
       summary: Deletes a run and data
@@ -364,7 +367,7 @@ paths:
     get:
       operationId: getRunData
       externalDocs:
-        description: Site spec
+        description: Official Site Documentation
         url: 'https://www.parsehub.com/docs/ref/api/v2/#get-a-run'
       description: >-
         This returns the data that was extracted by a run.
