@@ -50,7 +50,7 @@ paths:
   '/projects/{PROJECT_TOKEN}/last_ready_run/data':
     get:
       operationId: lastReadyRun
-      summary: This returns the data for the most recent ready run for a project.
+      summary: Gets latest data
       description: >
         This returns the data for the most recent ready run for a project. You
         can use this method in order to have a synchronous interface to your
@@ -296,7 +296,7 @@ paths:
         using a webhook instead. This method is rate-limited. For each run, you
         may make at most 25 calls during the first 5 minutes after the run
         started, and at most one call every 3 minutes after that.
-      summary: Returns the run object for a given run token
+      summary: Information for a specific run
       tags: 
         - Run
       parameters:
@@ -331,7 +331,7 @@ paths:
         description: Site spec
         url: 'https://www.parsehub.com/docs/ref/api/v2/#cancel-a-run'
       description: 'This cancels a run if running, and deletes the run and its data.'
-      summary: Deletes a run along with data
+      summary: Deletes a run and data
       tags:
         - Run
       parameters:
@@ -411,13 +411,14 @@ components:
   schemas:
     Project:
       type: object
+      description: Represents a project on parsehub.
       properties:
         token:
-          description: A globally unique id representing this project.
-          type: string
+          $ref: "#/components/schemas/ProjectToken"
         title:
           type: string
           description: The title give by the user when creating this project.
+          example: My Awesome Scraper
         templates_json:
           description: The JSON-stringified representation of all the instructions for running this project. This representation is not yet documented, but will eventually allow developers to create plugins for ParseHub.
         main_template:
@@ -436,6 +437,7 @@ components:
           description: The run object of the most recent ready run (ordered by start_time) for the project. A ready run is one whose data_ready attribute is truthy. The last_run and last_ready_run for a project may be the same.
     ProjectList:
       type: object
+      description: List of projects in the account
       properties:
         projects:
           type: array
@@ -455,6 +457,13 @@ components:
         * `csv` comma separated value text file
     Status:
       type: string
+      description: >
+        * `initialized` - initializing the job run 
+        * `queued` - ready and waiting behind other jobs
+        * `running` - currently executing, some data may be available
+        * `cancelled` - job was stopped by request
+        * `complete` - job has completed successfully
+        * `error` - job ended with an error status
       enum:
         - initialized
         - queued
@@ -481,6 +490,7 @@ components:
       example: tCcB4hfFP6wvBRe2gwZv9aJp
     Run:
       type: object
+      description: An instance of a job
       required:
         - run_token
       properties:
@@ -527,17 +537,24 @@ components:
           description: The starting value of the global scope for this run.
           type: string
     Error:
+      description: A problem with the request
       required:
         - code
         - message
       properties:
         code:
+          description: http status code
           type: integer
           format: int32
+          example: 404
         message:
+          description: description of the error
           type: string
+          example: Could not locate a run by the given token
         title:
           type: string
+          description: Generally the name of the error
+          example: Not found
 tags:
   - name: Project
     description: Acts on or retrieves project level information
