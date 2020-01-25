@@ -9,7 +9,7 @@ info:
   termsOfService: 'https://www.parsehub.com/terms'
 servers:
   - description: SwaggerHub API Auto Mocking
-    url: 'https://www.parsehub.com/api/v2/projects'
+    url: 'https://www.parsehub.com/api/v2'
 paths:
   '/runs/{RUN_TOKEN}/cancel':
     post:
