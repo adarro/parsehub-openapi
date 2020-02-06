@@ -1,0 +1,475 @@
+openapi: 3.0.1
+info:
+  version: 0.0.1
+  title: ParseHub
+  license:
+    name: Apache 2.0
+    url: 'https://www.apache.org/licenses/LICENSE-2.0.html'
+  description: 'OpenAPI definitions for [Parsehub] (https://www.parsehub.com)'
+  termsOfService: 'https://www.parsehub.com/terms'
+servers:
+  - description: SwaggerHub API Auto Mocking
+    url: 'https://www.parsehub.com/api/v2'
+paths:
+  '/runs/{RUN_TOKEN}/cancel':
+    post:
+      operationId: cancelJob
+      summary: Cancel a job
+      description: >-
+        This cancels a run and changes its status to cancelled. Any data that
+        was extracted so far will be available.
+      parameters:
+        - name: RUN_TOKEN
+          in: path
+          required: true
+          description: uid of the run instance
+          schema:
+            type: string
+        - name: api_key
+          in: query
+          description: uid of the user account
+          schema:
+            type: string
+          example: tF33Wsk30sWe
+      responses:
+        '200':
+          description: 'If successful, returns the run identified by {RUN_TOKEN}'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Run'
+        default:
+          description: unexpected error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+  '/projects/{PROJECT_TOKEN}/last_ready_run/data':
+    get:
+      summary: This returns the data for the most recent ready run for a project.
+      description: >
+        This returns the data for the most recent ready run for a project. You
+        can use this method in order to have a synchronous interface to your
+        project.
+          *Note: The Content-Encoding of this response is always gzip.*
+      externalDocs:
+        description: Site Documentation
+        url: 'https://www.parsehub.com/docs/ref/api/v2/#get-last-ready-data'
+      parameters:
+        - name: PROJECT_TOKEN
+          in: path
+          description: uid of the project
+          required: true
+          schema:
+            type: string
+          example: t-0WMEZ-Bc9sWEJASsYvP7y4
+        - name: api_key
+          in: query
+          description: uid of the account
+          schema:
+            type: string
+          example: tF33Wsk30sWe
+        - name: format
+          description: >
+            The format that you would like to get the data in. Possible values csv or json. Defaults to json
+          in: query
+          schema:
+            $ref: '#/components/schemas/ResultFormat'
+          example: json
+      responses:
+        '200':
+          description: The project Object
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Project'
+            text/csv:
+              schema:
+                type: string
+                format: binary
+        default:
+          description: unexpected error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+  '/projects/{PROJECT_TOKEN}':
+    get:
+      operationId: getProject
+      summary: This will return the project object for a specific project.
+      description: This will return the project object for a specific project.
+      parameters:
+        - name: PROJECT_TOKEN
+          in: path
+          required: true
+          schema:
+            type: string
+          example: t-0WMEZ-Bc9sWEJASsYvP7y4
+        - name: include_options
+          in: query
+          schema:
+            type: string
+          example: 1
+        - name: offset
+          in: query
+          schema:
+            type: string
+          example: 0
+        - name: api_key
+          in: query
+          required: true
+          schema:
+            type: string
+          example: tF33Wsk30sWe
+      externalDocs:
+        description: site specifications
+        url: 'https://www.parsehub.com/docs/ref/api/v2/#get-a-project'
+      responses:
+        '200':
+          description: The project Object
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Project'
+        default:
+          description: unexpected error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+  /projects:
+    get:
+      operationId: listProjects
+      description: This gets a list of projects in your account
+      summary: Lists projects
+      externalDocs:
+        description: Site specificatiion
+        url: 'https://www.parsehub.com/docs/ref/api/v2/#list-all-projects'
+      parameters:
+        - name: include_options
+          in: query
+          schema:
+            type: string
+          example: 1
+        - name: offset
+          in: query
+          schema:
+            type: string
+          example: 0
+        - name: api_key
+          in: query
+          schema:
+            type: string
+          required: true
+          example: tF33Wsk30sWe
+        - name: limit
+          in: query
+          schema:
+            type: string
+          example: 20
+      responses:
+        '200':
+          description: List of projects in your account
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ProjectList'
+        default:
+          description: unexpected error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+  '/{PROJECT_TOKEN}/run':
+    post:
+      operationId: runProject
+      description: >
+        This will start running an instance of the project on the ParseHub
+        cloud. It will create a new run object. This method will return
+        immediately, while the run continues in the background. You can use
+        webhooks or polling to figure out when the data for this run is ready in
+        order to retrieve it.
+      summary: Starts a running instance on the ParseHubCloud
+      externalDocs:
+        description: site specification
+        url: 'https://www.parsehub.com/docs/ref/api/v2/#run-a-project'
+      parameters:
+        - name: PROJECT_TOKEN
+          in: path
+          required: true
+          schema:
+            type: string
+          description: UID of the project to run
+          example: tHoFuTC_MTR1
+        - name: api_key
+          in: query
+          description: API key for your account
+          required: true
+          schema:
+            type: string
+        - name: start_url
+          description: The url to start running on. Defaults to the projects start_site.
+          in: query
+          schema:
+            type: string
+        - name: start_template
+          in: query
+          description: >-
+            (Optional)   The template to start running with. Defaults to the
+            projectss start_template (inside the options_json).
+          schema:
+            type: string
+        - name: start_value_override
+          description: >
+            (Optional)   The starting global scope for this run. This can be
+            used to pass parameters to your run. For example, you can pass
+            {"query": "San Francisco"} to use the query somewhere in your run.
+            Defaults to the projects start_value.
+          in: query
+          required: false
+          schema:
+            type: string
+        - name: send_email
+          description: >
+            (Optional)   If set to anything other than 0, send an email when the
+            run either completes successfully or fails due to an error. Defaults
+            to 0.
+          in: query
+          required: false
+          schema:
+            type: integer
+            format: int32
+            default: 0
+      responses:
+        '200':
+          description: Run information
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Run'
+        default:
+          description: unexpected error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+  '/runs/{RUN_TOKEN}':
+    get:
+      operationId: getRun
+      externalDocs:
+        description: Site spec
+        url: 'https://www.parsehub.com/docs/ref/api/v2/#get-a-run'
+      description: >-
+        You can call this method repeatedly to poll for when a run is done, though we recommend
+        using a webhook instead. This method is rate-limited. For each run, you
+        may make at most 25 calls during the first 5 minutes after the run
+        started, and at most one call every 3 minutes after that.
+      summary: Returns the run object for a given run token
+      parameters:
+        - name: api_key
+          in: query
+          description: API key for your account
+          schema:
+            type: string
+        - name: RUN_TOKEN
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Run information
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Run'
+        default:
+          description: unexpected error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+    delete:
+      operationId: deleteRun
+      externalDocs:
+        description: Site spec
+        url: 'https://www.parsehub.com/docs/ref/api/v2/#cancel-a-run'
+      description: 'This cancels a run if running, and deletes the run and its data.'
+      summary: Deletes a run along with data
+      parameters:
+        - name: api_key
+          in: query
+          description: API key for your account
+          schema:
+            type: string
+        - name: RUN_TOKEN
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: 'If successful, returns an object with the run token'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Run'
+        default:
+          description: unexpected error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+  '/runs/{RUN_TOKEN}/data':
+    get:
+      operationId: getRunData
+      externalDocs:
+        description: Site spec
+        url: 'https://www.parsehub.com/docs/ref/api/v2/#get-a-run'
+      description: >-
+        This returns the data that was extracted by a run.
+      summary: Gets Data for a run
+      parameters:
+        - name: api_key
+          in: query
+          description: API key for your account
+          schema:
+            type: string
+          required: true
+        - name: RUN_TOKEN
+          in: path
+          required: true
+          schema:
+            type: string
+        - name: format
+          description: The format that you would like to get the data in. Possible values csv or json. Defaults to json
+          in: query
+          schema:
+            $ref: '#/components/schemas/ResultFormat'
+          example: csv
+      responses:
+        '200':
+          description: Run data
+          content:
+            application/json:
+              schema:
+                type: object
+            text/csv:
+              schema:
+                type: string
+                format: binary
+        default:
+          description: unexpected error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+components:
+  schemas:
+    Project:
+      type: object
+      properties:
+        token:
+          description: A globally unique id representing this project.
+          type: string
+        title:
+          type: string
+          description: The title give by the user when creating this project.
+        templates_json:
+          description: The JSON-stringified representation of all the instructions for running this project. This representation is not yet documented, but will eventually allow developers to create plugins for ParseHub.
+        main_template:
+          description: The name of the template with which ParseHub should start executing the project.
+          type: string
+        main_site:
+          description: The default URL at which ParseHub should start running the project.
+          type: string
+        options_json:
+          description: An object containing several advanced options for the project.
+        last_run:
+          description: The run object of the most recently started run (orderd by start_time) for the project.
+          type: string
+          format: date-time
+        last_ready_run:
+          description: The run object of the most recent ready run (ordered by start_time) for the project. A ready run is one whose data_ready attribute is truthy. The last_run and last_ready_run for a project may be the same.
+    ProjectList:
+      type: object
+      properties:
+        projects:
+          type: array
+          items:
+            $ref: '#/components/schemas/Project'
+        total_projects:
+          description: The total number of projects in your account.
+          type: integer
+          format: int32
+    ResultFormat:
+      type: string
+      enum:
+        - json
+        - csv
+    Status:
+      type: string
+      enum:
+        - initialized
+        - queued
+        - running
+        - cancelled
+        - complete
+        - error
+    Run:
+      type: object
+      required:
+        - run_token
+      properties:
+        project_token:
+          description: >-
+            A globally unique id representing the project that this run belongs
+            to.
+          type: string
+          format: uid
+        run_token:
+          description: A globally unique id representing this run.
+          type: string
+        status:
+          $ref: '#/components/schemas/Status'
+        data_ready:
+          $ref: '#/components/schemas/Status'
+        start_time:
+          description: |
+            The time that this run was started at, in UTC +0000.
+          type: string
+          format: date-time
+        end_time:
+          description: >
+            The time that this run was stopped. This field will be null if the
+            run is either initialized or running. Time is in UTC +0000.
+          type: string
+          format: date-time
+        pages:
+          description: The number of pages that have been traversed by this run so far.
+          type: string
+        md5sum:
+          description: >
+            The md5sum of the results. This can be used to check if any results
+            data has changed between two runs.
+          type: string
+        start_url:
+          description: The url that this run was started on.
+          type: string
+          format: uri
+        start_template:
+          description: The template that this run was started with.
+          type: string
+        start_value:
+          description: The starting value of the global scope for this run.
+          type: string
+    Error:
+      required:
+        - code
+        - message
+      properties:
+        code:
+          type: integer
+          format: int32
+        message:
+          type: string
