@@ -11,16 +11,14 @@ info:
     name: Andre White
     email: adarro@gmail.com
 servers:
-  - description: SwaggerHub API Auto Mocking
+  - description: Parsehub Server
     url: 'https://www.parsehub.com/api/v2'
 paths:
   '/runs/{RUN_TOKEN}/cancel':
     post:
       operationId: cancelJob
       summary: Cancel a job
-      description: >-
-        This cancels a run and changes its status to cancelled. Any data that
-        was extracted so far will be available.
+      description: This cancels a run and changes its status to cancelled. Any data that was extracted so far will be available.
       parameters:
         - name: RUN_TOKEN
           in: path
@@ -47,14 +45,14 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/Error'
+    tags:
+      - Run Specific
+      - Project
   '/projects/{PROJECT_TOKEN}/last_ready_run/data':
     get:
-      operationId: lastReadyData
       summary: This returns the data for the most recent ready run for a project.
-      description: >
-        This returns the data for the most recent ready run for a project. You
-        can use this method in order to have a synchronous interface to your
-        project.
+      description: |
+        This returns the data for the most recent ready run for a project. You can use this method in order to have a synchronous interface to your project.
           *Note: The Content-Encoding of this response is always gzip.*
       externalDocs:
         description: Site Documentation
@@ -74,7 +72,7 @@ paths:
             type: string
           example: tF33Wsk30sWe
         - name: format
-          description: >
+          description: |
             The format that you would like to get the data in. Possible values csv or json. Defaults to json
           in: query
           schema:
@@ -97,6 +95,10 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/Error'
+      operationId: lastReadyData
+      tags:
+        - Project
+        - Information
   '/projects/{PROJECT_TOKEN}':
     get:
       operationId: getProject
@@ -141,6 +143,9 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/Error'
+      tags:
+        - Project
+        - Information
   /projects:
     get:
       operationId: listProjects
@@ -151,6 +156,7 @@ paths:
         url: 'https://www.parsehub.com/docs/ref/api/v2/#list-all-projects'
       parameters:
         - name: include_options
+          description: Adds options_json, main_template, main_site and webhook to the entries of projects. Set this parameter to 1 if you intend to use them in ParseHub API calls. This parameter requires use of the offset and limit parameters to access the full list of projects.          
           in: query
           schema:
             type: string
@@ -184,15 +190,13 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/Error'
+      tags:
+        - Read
   '/{PROJECT_TOKEN}/run':
     post:
       operationId: runProject
-      description: >
-        This will start running an instance of the project on the ParseHub
-        cloud. It will create a new run object. This method will return
-        immediately, while the run continues in the background. You can use
-        webhooks or polling to figure out when the data for this run is ready in
-        order to retrieve it.
+      description: |
+        This will start running an instance of the project on the ParseHub cloud. It will create a new run object. This method will return immediately, while the run continues in the background. You can use webhooks or polling to figure out when the data for this run is ready in order to retrieve it.
       summary: Starts a running instance on the ParseHubCloud
       externalDocs:
         description: site specification
@@ -212,32 +216,25 @@ paths:
           schema:
             type: string
         - name: start_url
-          description: The url to start running on. Defaults to the project’s start_site.
+          description: The url to start running on. Defaults to the projects start_site.
           in: query
           schema:
             type: string
         - name: start_template
           in: query
-          description: >-
-            (Optional)   The template to start running with. Defaults to the
-            projects’s start_template (inside the options_json).
+          description: (Optional)   The template to start running with. Defaults to the projectss start_template (inside the options_json).
           schema:
             type: string
         - name: start_value_override
-          description: >
-            (Optional)   The starting global scope for this run. This can be
-            used to pass parameters to your run. For example, you can pass
-            {"query": "San Francisco"} to use the query somewhere in your run.
-            Defaults to the project’s start_value.
+          description: |
+            (Optional)   The starting global scope for this run. This can be used to pass parameters to your run. For example, you can pass {"query": "San Francisco"} to use the query somewhere in your run. Defaults to the projects start_value.
           in: query
           required: false
           schema:
             type: string
         - name: send_email
-          description: >
-            (Optional)   If set to anything other than 0, send an email when the
-            run either completes successfully or fails due to an error. Defaults
-            to 0.
+          description: |
+            (Optional)   If set to anything other than 0, send an email when the run either completes successfully or fails due to an error. Defaults to 0.
           in: query
           required: false
           schema:
@@ -263,11 +260,7 @@ paths:
       externalDocs:
         description: Site spec
         url: 'https://www.parsehub.com/docs/ref/api/v2/#get-a-run'
-      description: >-
-        You can call this method repeatedly to poll for when a run is done, though we recommend
-        using a webhook instead. This method is rate-limited. For each run, you
-        may make at most 25 calls during the first 5 minutes after the run
-        started, and at most one call every 3 minutes after that.
+      description: 'You can call this method repeatedly to poll for when a run is done, though we recommend using a webhook instead. This method is rate-limited. For each run, you may make at most 25 calls during the first 5 minutes after the run started, and at most one call every 3 minutes after that.'
       summary: Returns the run object for a given run token
       parameters:
         - name: api_key
@@ -330,8 +323,7 @@ paths:
       externalDocs:
         description: Site spec
         url: 'https://www.parsehub.com/docs/ref/api/v2/#get-a-run'
-      description: >-
-        This returns the data that was extracted by a run.
+      description: This returns the data that was extracted by a run.
       summary: Gets Data for a run
       parameters:
         - name: api_key
@@ -380,7 +372,7 @@ components:
           type: string
           description: The title give by the user when creating this project.
         templates_json:
-          description: The JSON-stringified representation of all the instructions for running this project. This representation is not yet documented, but will eventually allow developers to create plugins for ParseHub.
+          description: 'The JSON-stringified representation of all the instructions for running this project. This representation is not yet documented, but will eventually allow developers to create plugins for ParseHub.'
         main_template:
           description: The name of the template with which ParseHub should start executing the project.
           type: string
@@ -426,9 +418,7 @@ components:
         - run_token
       properties:
         project_token:
-          description: >-
-            A globally unique id representing the project that this run belongs
-            to.
+          description: A globally unique id representing the project that this run belongs to.
           type: string
           format: uid
         run_token:
@@ -444,18 +434,16 @@ components:
           type: string
           format: date-time
         end_time:
-          description: >
-            The time that this run was stopped. This field will be null if the
-            run is either initialized or running. Time is in UTC +0000.
+          description: |
+            The time that this run was stopped. This field will be null if the run is either initialized or running. Time is in UTC +0000.
           type: string
           format: date-time
         pages:
           description: The number of pages that have been traversed by this run so far.
           type: string
         md5sum:
-          description: >
-            The md5sum of the results. This can be used to check if any results
-            data has changed between two runs.
+          description: |
+            The md5sum of the results. This can be used to check if any results data has changed between two runs.
           type: string
         start_url:
           description: The url that this run was started on.
@@ -477,3 +465,12 @@ components:
           format: int32
         message:
           type: string
+tags:
+  - name: Project
+    description: Operates on a specific project
+  - name: Information
+    description: Provides status or general information
+  - name: Execution
+    description: Executes a process such as start / stop / cancelling a job
+  - name: Data
+    description: Affects data (retrieves / deletes etc.)
