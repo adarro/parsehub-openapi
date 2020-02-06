@@ -7,6 +7,9 @@ info:
     url: 'https://www.apache.org/licenses/LICENSE-2.0.html'
   description: 'OpenAPI definitions for [Parsehub] (https://www.parsehub.com)'
   termsOfService: 'https://www.parsehub.com/terms'
+  contact:
+    name: Andre White
+    email: adarro@gmail.com
 servers:
   - description: SwaggerHub API Auto Mocking
     url: 'https://www.parsehub.com/api/v2'
@@ -46,6 +49,7 @@ paths:
                 $ref: '#/components/schemas/Error'
   '/projects/{PROJECT_TOKEN}/last_ready_run/data':
     get:
+      operationId: lastReadyData
       summary: This returns the data for the most recent ready run for a project.
       description: >
         This returns the data for the most recent ready run for a project. You
@@ -113,7 +117,7 @@ paths:
         - name: offset
           in: query
           schema:
-            type: string
+            type: integer
           example: 0
         - name: api_key
           in: query
@@ -154,7 +158,7 @@ paths:
         - name: offset
           in: query
           schema:
-            type: string
+            type: integer
           example: 0
         - name: api_key
           in: query
@@ -165,7 +169,7 @@ paths:
         - name: limit
           in: query
           schema:
-            type: string
+            type: integer
           example: 20
       responses:
         '200':
