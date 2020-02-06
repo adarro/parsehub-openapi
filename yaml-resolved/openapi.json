@@ -1,0 +1,768 @@
+{
+  "openapi" : "3.0.1",
+  "info" : {
+    "title" : "ParseHub",
+    "description" : "OpenAPI definitions for [Parsehub] (https://www.parsehub.com)",
+    "termsOfService" : "https://www.parsehub.com/terms",
+    "license" : {
+      "name" : "Apache 2.0",
+      "url" : "https://www.apache.org/licenses/LICENSE-2.0.html"
+    },
+    "version" : "0.0.1"
+  },
+  "servers" : [ {
+    "url" : "https://www.parsehub.com/api/v2/projects",
+    "description" : "SwaggerHub API Auto Mocking"
+  } ],
+  "tags" : [ {
+    "name" : "Project",
+    "description" : "Acts on or retrieves project level information"
+  }, {
+    "name" : "Run",
+    "description" : "Acts on or retrieves Job level information (Runs)"
+  }, {
+    "name" : "Data",
+    "description" : "Affects data (retrieves / deletes etc.)"
+  } ],
+  "paths" : {
+    "/runs/{RUN_TOKEN}/cancel" : {
+      "post" : {
+        "tags" : [ "Run" ],
+        "summary" : "Cancel a job",
+        "description" : "This cancels a run and changes its status to cancelled. Any data that was extracted so far will be available.",
+        "externalDocs" : {
+          "description" : "Official Site Documentation",
+          "url" : "https://www.parsehub.com/docs/ref/api/v2/#cancel-a-run"
+        },
+        "operationId" : "cancelJob",
+        "parameters" : [ {
+          "name" : "RUN_TOKEN",
+          "in" : "path",
+          "description" : "uid of the run instance",
+          "required" : true,
+          "style" : "simple",
+          "explode" : false,
+          "schema" : {
+            "$ref" : "#/components/schemas/RunToken"
+          }
+        }, {
+          "name" : "api_key",
+          "in" : "query",
+          "description" : "The API key for your account.",
+          "required" : true,
+          "style" : "form",
+          "explode" : true,
+          "schema" : {
+            "$ref" : "#/components/schemas/ApiKey"
+          },
+          "example" : "tF33Wsk30sWe"
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "If successful, returns the run identified by {RUN_TOKEN}",
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/Run"
+                }
+              }
+            }
+          },
+          "default" : {
+            "description" : "unexpected error",
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/Error"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/projects/{PROJECT_TOKEN}/last_ready_run/data" : {
+      "get" : {
+        "tags" : [ "Run", "Data" ],
+        "summary" : "Gets latest data",
+        "description" : "This returns the data for the most recent ready run for a project. You can use this method in order to have a synchronous interface to your project.\n  *Note: The Content-Encoding of this response is always gzip.*\n",
+        "externalDocs" : {
+          "description" : "Official Site Documentation",
+          "url" : "https://www.parsehub.com/docs/ref/api/v2/#get-last-ready-data"
+        },
+        "operationId" : "lastReadyRun",
+        "parameters" : [ {
+          "name" : "PROJECT_TOKEN",
+          "in" : "path",
+          "description" : "uid of the project",
+          "required" : true,
+          "style" : "simple",
+          "explode" : false,
+          "schema" : {
+            "$ref" : "#/components/schemas/ProjectToken"
+          },
+          "example" : "t-0WMEZ-Bc9sWEJASsYvP7y4"
+        }, {
+          "name" : "api_key",
+          "in" : "query",
+          "description" : "The API key for your account.",
+          "required" : true,
+          "style" : "form",
+          "explode" : true,
+          "schema" : {
+            "type" : "string"
+          },
+          "example" : "tF33Wsk30sWe"
+        }, {
+          "name" : "format",
+          "in" : "query",
+          "description" : "The format that you would like to get the data in. Possible values csv or json. Defaults to json\n",
+          "required" : false,
+          "style" : "form",
+          "explode" : true,
+          "schema" : {
+            "$ref" : "#/components/schemas/ResultFormat"
+          },
+          "example" : "json"
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "The project Object",
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/Project"
+                }
+              },
+              "text/csv" : {
+                "schema" : {
+                  "type" : "string",
+                  "format" : "binary"
+                }
+              }
+            }
+          },
+          "default" : {
+            "description" : "unexpected error",
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/Error"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/projects/{PROJECT_TOKEN}" : {
+      "get" : {
+        "tags" : [ "Project" ],
+        "summary" : "Get the project object",
+        "description" : "This will return the project object for a specific project. Including extra information if requested via include_options.",
+        "externalDocs" : {
+          "description" : "Official Site Documentation",
+          "url" : "https://www.parsehub.com/docs/ref/api/v2/#get-a-project"
+        },
+        "operationId" : "getProject",
+        "parameters" : [ {
+          "name" : "PROJECT_TOKEN",
+          "in" : "path",
+          "description" : "uid of the project instance",
+          "required" : true,
+          "style" : "simple",
+          "explode" : false,
+          "schema" : {
+            "$ref" : "#/components/schemas/ProjectToken"
+          },
+          "example" : "t-0WMEZ-Bc9sWEJASsYvP7y4"
+        }, {
+          "name" : "include_options",
+          "in" : "query",
+          "description" : "Includes the “options_json” key in the result returned. For performance reasons, we exclude this key by default.",
+          "required" : false,
+          "style" : "form",
+          "explode" : true,
+          "schema" : {
+            "type" : "integer",
+            "format" : "int32"
+          },
+          "example" : 1
+        }, {
+          "name" : "offset",
+          "in" : "query",
+          "description" : "Specifies the offset from which to start the run_list. E.g. in order to get most recent runs 21-40, specify an offset of 20. Defaults to 0.",
+          "required" : false,
+          "style" : "form",
+          "explode" : true,
+          "schema" : {
+            "minimum" : 0,
+            "type" : "integer",
+            "format" : "int32"
+          },
+          "example" : 0
+        }, {
+          "name" : "api_key",
+          "in" : "query",
+          "description" : "The API key for your account.",
+          "required" : true,
+          "style" : "form",
+          "explode" : true,
+          "schema" : {
+            "$ref" : "#/components/schemas/ApiKey"
+          },
+          "example" : "tF33Wsk30sWe"
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "The project Object",
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/Project"
+                }
+              }
+            }
+          },
+          "default" : {
+            "description" : "unexpected error",
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/Error"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/projects" : {
+      "get" : {
+        "tags" : [ "Project" ],
+        "summary" : "Lists projects",
+        "description" : "This gets a list of projects in your account",
+        "externalDocs" : {
+          "description" : "Official Site Documentation",
+          "url" : "https://www.parsehub.com/docs/ref/api/v2/#list-all-projects"
+        },
+        "operationId" : "listProjects",
+        "parameters" : [ {
+          "name" : "include_options",
+          "in" : "query",
+          "description" : "Adds options_json, main_template, main_site and webhook to the entries of projects. Set this parameter to 1 if you intend to use them in ParseHub API calls. This parameter requires use of the offset and limit parameters to access the full list of projects.\n",
+          "required" : false,
+          "style" : "form",
+          "explode" : true,
+          "schema" : {
+            "type" : "integer",
+            "format" : "int32"
+          },
+          "example" : 1
+        }, {
+          "name" : "offset",
+          "in" : "query",
+          "description" : "Specifies the offset from which to start the projects. E.g. in order to get projects 21-40, specify an offset of 20. Defaults to 0.",
+          "required" : false,
+          "style" : "form",
+          "explode" : true,
+          "schema" : {
+            "minimum" : 0,
+            "type" : "integer",
+            "format" : "int32"
+          },
+          "example" : 0
+        }, {
+          "name" : "api_key",
+          "in" : "query",
+          "description" : "The API key for your account.",
+          "required" : true,
+          "style" : "form",
+          "explode" : true,
+          "schema" : {
+            "$ref" : "#/components/schemas/ApiKey"
+          },
+          "example" : "tF33Wsk30sWe"
+        }, {
+          "name" : "limit",
+          "in" : "query",
+          "description" : "Specifies how many entries will be returned in projects. Accepts values between 1 and 20 inclusively. Defaults to 20.",
+          "required" : false,
+          "style" : "form",
+          "explode" : true,
+          "schema" : {
+            "maximum" : 20.0,
+            "minimum" : 1,
+            "type" : "integer",
+            "format" : "int32"
+          },
+          "example" : 20
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "List of projects in your account",
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/ProjectList"
+                }
+              }
+            }
+          },
+          "default" : {
+            "description" : "unexpected error",
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/Error"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/{PROJECT_TOKEN}/run" : {
+      "post" : {
+        "tags" : [ "Run" ],
+        "summary" : "Starts a running instance on the ParseHubCloud",
+        "description" : "This will start running an instance of the project on the ParseHub cloud. It will create a new run object. This method will return immediately, while the run continues in the background. You can use webhooks or polling to figure out when the data for this run is ready in order to retrieve it.\n",
+        "externalDocs" : {
+          "description" : "Official Site Documentation",
+          "url" : "https://www.parsehub.com/docs/ref/api/v2/#run-a-project"
+        },
+        "operationId" : "runProject",
+        "parameters" : [ {
+          "name" : "PROJECT_TOKEN",
+          "in" : "path",
+          "description" : "UID of the project to run",
+          "required" : true,
+          "style" : "simple",
+          "explode" : false,
+          "schema" : {
+            "type" : "string"
+          },
+          "example" : "tHoFuTC_MTR1"
+        }, {
+          "name" : "api_key",
+          "in" : "query",
+          "description" : "API key for your account",
+          "required" : true,
+          "style" : "form",
+          "explode" : true,
+          "schema" : {
+            "$ref" : "#/components/schemas/ApiKey"
+          }
+        }, {
+          "name" : "start_url",
+          "in" : "query",
+          "description" : "The url to start running on. Defaults to the project’s start_site.",
+          "required" : false,
+          "style" : "form",
+          "explode" : true,
+          "schema" : {
+            "type" : "string"
+          }
+        }, {
+          "name" : "start_template",
+          "in" : "query",
+          "description" : "(Optional)   The template to start running with. Defaults to the projects’s start_template (inside the options_json).",
+          "required" : false,
+          "style" : "form",
+          "explode" : true,
+          "schema" : {
+            "type" : "string"
+          }
+        }, {
+          "name" : "start_value_override",
+          "in" : "query",
+          "description" : "(Optional)   The starting global scope for this run. This can be used to pass parameters to your run. For example, you can pass {\"query\": \"San Francisco\"} to use the query somewhere in your run. Defaults to the project’s start_value.\n",
+          "required" : false,
+          "style" : "form",
+          "explode" : true,
+          "schema" : {
+            "type" : "string"
+          }
+        }, {
+          "name" : "send_email",
+          "in" : "query",
+          "description" : "(Optional)   If set to anything other than 0, send an email when the run either completes successfully or fails due to an error. Defaults to 0.\n",
+          "required" : false,
+          "style" : "form",
+          "explode" : true,
+          "schema" : {
+            "type" : "integer",
+            "format" : "int32",
+            "default" : 0
+          }
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "Run information",
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/Run"
+                }
+              }
+            }
+          },
+          "default" : {
+            "description" : "unexpected error",
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/Error"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/runs/{RUN_TOKEN}" : {
+      "get" : {
+        "tags" : [ "Run" ],
+        "summary" : "Information for a specific run",
+        "description" : "You can call this method repeatedly to poll for when a run is done, though we recommend using a webhook instead. This method is rate-limited. For each run, you may make at most 25 calls during the first 5 minutes after the run started, and at most one call every 3 minutes after that.",
+        "externalDocs" : {
+          "description" : "Official Site Documentation",
+          "url" : "https://www.parsehub.com/docs/ref/api/v2/#get-a-run"
+        },
+        "operationId" : "getRun",
+        "parameters" : [ {
+          "name" : "api_key",
+          "in" : "query",
+          "description" : "API key for your account",
+          "required" : true,
+          "style" : "form",
+          "explode" : true,
+          "schema" : {
+            "$ref" : "#/components/schemas/ApiKey"
+          }
+        }, {
+          "name" : "RUN_TOKEN",
+          "in" : "path",
+          "description" : "uid of the run instance",
+          "required" : true,
+          "style" : "simple",
+          "explode" : false,
+          "schema" : {
+            "$ref" : "#/components/schemas/RunToken"
+          }
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "Run information",
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/Run"
+                }
+              }
+            }
+          },
+          "default" : {
+            "description" : "unexpected error",
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/Error"
+                }
+              }
+            }
+          }
+        }
+      },
+      "delete" : {
+        "tags" : [ "Run" ],
+        "summary" : "Deletes a run and data",
+        "description" : "This cancels a run if running, and deletes the run and its data.",
+        "externalDocs" : {
+          "description" : "Official Site Documentation",
+          "url" : "https://www.parsehub.com/docs/ref/api/v2/#cancel-a-run"
+        },
+        "operationId" : "deleteRun",
+        "parameters" : [ {
+          "name" : "api_key",
+          "in" : "query",
+          "description" : "API key for your account",
+          "required" : true,
+          "style" : "form",
+          "explode" : true,
+          "schema" : {
+            "$ref" : "#/components/schemas/ApiKey"
+          }
+        }, {
+          "name" : "RUN_TOKEN",
+          "in" : "path",
+          "description" : "uid of the run instance",
+          "required" : true,
+          "style" : "simple",
+          "explode" : false,
+          "schema" : {
+            "$ref" : "#/components/schemas/RunToken"
+          }
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "If successful, returns an object with the run token",
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/Run"
+                }
+              }
+            }
+          },
+          "default" : {
+            "description" : "unexpected error",
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/Error"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/runs/{RUN_TOKEN}/data" : {
+      "get" : {
+        "tags" : [ "Run" ],
+        "summary" : "Gets Data for a run",
+        "description" : "This returns the data that was extracted by a run.",
+        "externalDocs" : {
+          "description" : "Official Site Documentation",
+          "url" : "https://www.parsehub.com/docs/ref/api/v2/#get-a-run"
+        },
+        "operationId" : "getRunData",
+        "parameters" : [ {
+          "name" : "api_key",
+          "in" : "query",
+          "description" : "API key for your account",
+          "required" : true,
+          "style" : "form",
+          "explode" : true,
+          "schema" : {
+            "$ref" : "#/components/schemas/ApiKey"
+          }
+        }, {
+          "name" : "RUN_TOKEN",
+          "in" : "path",
+          "description" : "uid of run instance (set from getRun or listed in last ready run)",
+          "required" : true,
+          "style" : "simple",
+          "explode" : false,
+          "schema" : {
+            "$ref" : "#/components/schemas/RunToken"
+          }
+        }, {
+          "name" : "format",
+          "in" : "query",
+          "description" : "The format that you would like to get the data in. Possible values csv or json. Defaults to json",
+          "required" : false,
+          "style" : "form",
+          "explode" : true,
+          "schema" : {
+            "$ref" : "#/components/schemas/ResultFormat"
+          },
+          "example" : "csv"
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "Run data",
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "type" : "object"
+                }
+              },
+              "text/csv" : {
+                "schema" : {
+                  "type" : "string",
+                  "format" : "binary"
+                }
+              }
+            }
+          },
+          "default" : {
+            "description" : "unexpected error",
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/Error"
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "components" : {
+    "schemas" : {
+      "Project" : {
+        "type" : "object",
+        "properties" : {
+          "token" : {
+            "$ref" : "#/components/schemas/ProjectToken"
+          },
+          "title" : {
+            "type" : "string",
+            "description" : "The title give by the user when creating this project.",
+            "example" : "My Awesome Scraper"
+          },
+          "templates_json" : {
+            "description" : "The JSON-stringified representation of all the instructions for running this project. This representation is not yet documented, but will eventually allow developers to create plugins for ParseHub."
+          },
+          "main_template" : {
+            "type" : "string",
+            "description" : "The name of the template with which ParseHub should start executing the project."
+          },
+          "main_site" : {
+            "type" : "string",
+            "description" : "The default URL at which ParseHub should start running the project."
+          },
+          "options_json" : {
+            "description" : "An object containing several advanced options for the project."
+          },
+          "last_run" : {
+            "type" : "string",
+            "description" : "The run object of the most recently started run (orderd by start_time) for the project.",
+            "format" : "date-time"
+          },
+          "last_ready_run" : {
+            "description" : "The run object of the most recent ready run (ordered by start_time) for the project. A ready run is one whose data_ready attribute is truthy. The last_run and last_ready_run for a project may be the same."
+          }
+        },
+        "description" : "Represents a project on parsehub."
+      },
+      "ProjectList" : {
+        "type" : "object",
+        "properties" : {
+          "projects" : {
+            "type" : "array",
+            "items" : {
+              "$ref" : "#/components/schemas/Project"
+            }
+          },
+          "total_projects" : {
+            "type" : "integer",
+            "description" : "The total number of projects in your account.",
+            "format" : "int32"
+          }
+        },
+        "description" : "List of projects in the account"
+      },
+      "ResultFormat" : {
+        "type" : "string",
+        "description" : "* `json` jsonformat * `csv` comma separated value text file\n",
+        "enum" : [ "json", "csv" ]
+      },
+      "Status" : {
+        "type" : "string",
+        "description" : "* `initialized` - initializing the job run  * `queued` - ready and waiting behind other jobs * `running` - currently executing, some data may be available * `cancelled` - job was stopped by request * `complete` - job has completed successfully * `error` - job ended with an error status\n",
+        "enum" : [ "initialized", "queued", "running", "cancelled", "complete", "error" ]
+      },
+      "RunToken" : {
+        "type" : "string",
+        "description" : "ID for a given run instance",
+        "example" : "tCcB4hfFP6wvBRe2gwZv9aJp"
+      },
+      "ProjectToken" : {
+        "type" : "string",
+        "example" : "t-0WMEZ-Bc9sWGHAMsYvP7y4",
+        "externalDocs" : {
+          "description" : "How to access your API Key / Project Token",
+          "url" : "https://help.parsehub.com/hc/en-us/articles/218181017-Access-your-API-key-Project-Token"
+        }
+      },
+      "ApiKey" : {
+        "type" : "string",
+        "description" : "The API key for your account.",
+        "example" : "tCcB4hfFP6wvBRe2gwZv9aJp",
+        "externalDocs" : {
+          "description" : "How to access your API Key / Project Token",
+          "url" : "https://help.parsehub.com/hc/en-us/articles/218181017-Access-your-API-key-Project-Token"
+        }
+      },
+      "Run" : {
+        "required" : [ "run_token" ],
+        "type" : "object",
+        "properties" : {
+          "project_token" : {
+            "type" : "string",
+            "description" : "A globally unique id representing the project that this run belongs to.",
+            "format" : "uid"
+          },
+          "run_token" : {
+            "type" : "string",
+            "description" : "A globally unique id representing this run."
+          },
+          "status" : {
+            "$ref" : "#/components/schemas/Status"
+          },
+          "data_ready" : {
+            "$ref" : "#/components/schemas/Status"
+          },
+          "start_time" : {
+            "type" : "string",
+            "description" : "The time that this run was started at, in UTC +0000.\n",
+            "format" : "date-time"
+          },
+          "end_time" : {
+            "type" : "string",
+            "description" : "The time that this run was stopped. This field will be null if the run is either initialized or running. Time is in UTC +0000.\n",
+            "format" : "date-time"
+          },
+          "pages" : {
+            "type" : "string",
+            "description" : "The number of pages that have been traversed by this run so far."
+          },
+          "md5sum" : {
+            "type" : "string",
+            "description" : "The md5sum of the results. This can be used to check if any results data has changed between two runs.\n"
+          },
+          "start_url" : {
+            "type" : "string",
+            "description" : "The url that this run was started on.",
+            "format" : "uri"
+          },
+          "start_template" : {
+            "type" : "string",
+            "description" : "The template that this run was started with."
+          },
+          "start_value" : {
+            "type" : "string",
+            "description" : "The starting value of the global scope for this run."
+          }
+        },
+        "description" : "An instance of a job"
+      },
+      "Error" : {
+        "required" : [ "code", "message" ],
+        "properties" : {
+          "code" : {
+            "type" : "integer",
+            "description" : "http status code",
+            "format" : "int32",
+            "example" : 404
+          },
+          "message" : {
+            "type" : "string",
+            "description" : "description of the error",
+            "example" : "Could not locate a run by the given token"
+          },
+          "title" : {
+            "type" : "string",
+            "description" : "Generally the name of the error",
+            "example" : "Not found"
+          }
+        },
+        "description" : "A problem with the request"
+      }
+    }
+  }
+}
